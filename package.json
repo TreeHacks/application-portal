@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "mongo": "node ./src/setupMongo.js",
-    "test": "dotenv jest -- --runInBand",
+    "test": "dotenv jest",
     "tdd": "dotenv jest -- --watch --runInBand",
     "start": "concurrently --kill-others \"npm run mongo\" \"npm run build:live\"",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- -r dotenv/config ./src/index.ts",
@@ -71,7 +71,6 @@
     "ts-node": "^7.0.0"
   },
   "jest": {
-    "testEnvironment": "node",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
@@ -84,7 +83,8 @@
       "json",
       "node"
     ],
-    "globalSetup": "./src/setupMongo.js",
-    "globalTeardown": "./src/teardownMongo.js"
+    "globalSetup": "./test/setup.js",
+    "globalTeardown": "./test/teardown.js",
+    "testEnvironment": "./test/mongo-environment.js"
   }
 }

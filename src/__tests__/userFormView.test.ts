@@ -4,6 +4,9 @@ import app from "../index";
 import Application from "../models/Application";
 import { isEqual, omit } from "lodash";
 import { STATUS, sponsorApplicationDisplayFields } from '../constants';
+import mongoose from "mongoose";
+import { connectMongoose, disconnectMongoose } from '../../test/helper';
+import { connect } from 'http2';
 
 const _doc = {
     _id: null,
@@ -42,13 +45,17 @@ const docs = [
     {..._doc, _id: 'applicant-confirmed', status: STATUS.ADMISSION_CONFIRMED },
     {..._doc, _id: 'applicant-admitted', status: STATUS.ADMITTED }
 ];
-beforeAll(() => {
-    return Application.insertMany(docs);
+
+let connection;
+beforeAll(async () => {
+    await connectMongoose();
+    await Application.insertMany(docs);
 });
 
-afterAll(() => {
-    return Application.deleteMany({});
-})
+afterAll(async () => {
+    await Application.deleteMany({});
+    await disconnectMongoose();
+});
 
 describe('user form view by applicant', () => {
     test('view form with same id - success', () => {

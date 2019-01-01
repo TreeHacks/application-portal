@@ -4,6 +4,8 @@ import app from "../index";
 import Application from "../models/Application";
 import { isEqual, omit } from "lodash";
 import { STATUS, sponsorApplicationDisplayFields } from '../constants';
+import mongoose from 'mongoose';
+import { connectMongoose, disconnectMongoose } from '../../test/helper';
 
 const _doc = {
     _id: null,
@@ -42,12 +44,14 @@ const docs = [
     { ..._doc, _id: 'applicant-confirmed-2', status: STATUS.ADMISSION_CONFIRMED }
 ];
 
-beforeAll(() => {
-    return Application.insertMany(docs);
+beforeAll(async () => {
+    await connectMongoose();
+    await Application.insertMany(docs);
 });
 
-afterAll(() => {
-    return Application.deleteMany({});
+afterAll(async () => {
+    await Application.deleteMany({});
+    await disconnectMongoose();
 });
 
 describe('user form list by applicant', () => {
