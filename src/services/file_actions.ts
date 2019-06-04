@@ -1,4 +1,4 @@
-import AWS from "aws-sdk";
+import AWS, {S3} from "aws-sdk";
 
 export async function uploadBase64Content(key, fileContent) {
     const contentType = fileContent.match(/data:([^;]+);/)[1];
@@ -43,5 +43,5 @@ export async function getFile(filePath) {
             if (err) { return reject(err); }
             resolve(data);
         });
-    });
+    }) as Promise<S3.Types.GetObjectOutput | null>;
 }
